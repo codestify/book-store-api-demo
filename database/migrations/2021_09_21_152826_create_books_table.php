@@ -16,7 +16,7 @@ class CreateBooksTable extends Migration
         Schema::create('books', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('tag_id')->index();
-            $table->foreignId('author_id')->constrained()->cascadeOnDelete();
+            $table->unsignedBigInteger('author_id')->index();
             $table->unsignedBigInteger('type_id')->index();
             $table->string('title');
             $table->text('description');
@@ -24,16 +24,6 @@ class CreateBooksTable extends Migration
             $table->integer('quantity');
             $table->string('image_url');
             $table->timestamps();
-
-            $table->foreign('tag_id')
-                ->references('id')
-                ->on('market_places_tags')
-                ->onDelete('cascade');
-
-            $table->foreign('type_id')
-                ->references('id')
-                ->on('book_types')
-                ->onDelete('cascade');
         });
     }
 
