@@ -17,9 +17,6 @@ services:
         image: redis:5.0.6-alpine
         ports:
             - ${REDIS_HOST_PORT}:6379
-networks:
-    thrift-network:
-        driver: bridge
 volumes:
     thriftredis:
         driver: local
