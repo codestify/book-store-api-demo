@@ -1,0 +1,324 @@
+swagger: "2.0"
+info:
+  description: "Api docs for the test online store.  You can find out more about     Swagger at [http://swagger.io](http://swagger.io)"
+  version: "0.0.1"
+  title: "Online Book Store Server Api"
+  contact:
+    email: "muhammad.shah@hotmail.co.uk"
+host: "localhost"
+basePath: "/api"
+tags:
+  - name: "Book"
+    description: "Operations about book"
+  - name: "Author"
+    description: "Operations about author"
+
+schemes:
+  - "http"
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+paths:
+  /books:
+    post:
+      tags:
+        - "Book"
+      summary: "Creating a new Book"
+      description: "Calling this endpoint will create a new book"
+      consumes:
+        - "application/x-www-form-urlencoded"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "author"
+          in: "formData"
+          description: "author name for the book"
+          required: true
+          type: "string"
+        - name: "tag"
+          in: "formData"
+          description: "existing tag for the book i.e. local_name"
+          required: true
+          type: "string"
+        - name: "type"
+          in: "formData"
+          description: "existing type of the book"
+          required: true
+          type: "string"
+        - name: "title"
+          description: "title of the book"
+          in: "formData"
+          type: "string"
+          required: true
+        - name: "quantity"
+          in: "formData"
+          type: "integer"
+          description: "Quantity of the book"
+          required: true
+        - name: "image_url"
+          in: "formData"
+          description: "Image url for the book"
+          required: true
+          type: "string"
+        - name: "description"
+          description: "Description of the book"
+          in: formData
+          required: true
+          type: string
+        - name: "price"
+          description: "Price of book as a decimal value"
+          in: formData
+          required: true
+          type: number
+        - name: "omni_channel"
+          in: "formData"
+          description: "should it be published on other market places e.g. ebay,amazon"
+          required: false
+          type: string
+
+      responses:
+        201:
+          description: "Newly Created book response"
+          schema:
+            $ref: "#/definitions/Book"
+        422:
+          description: "Error"
+  "/books/{bookId}":
+    get:
+      tags:
+        - "Book"
+      description: "Retrieve single book and relevant data by id"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "bookId"
+          in: "path"
+          description: "ID of the book to get"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        200:
+          description: "Book response"
+          schema:
+            $ref: "#/definitions/Book"
+
+    patch:
+      tags:
+        - "Book"
+      description: "Update book details using its id"
+      consumes:
+        - "application/x-www-form-urlencoded"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "bookId"
+          in: "path"
+          description: "ID of the book to update"
+          required: true
+          type: "integer"
+          format: "int64"
+        - name: "title"
+          description: "title of the book"
+          in: "formData"
+          type: "string"
+          required: false
+        - name: "quantity"
+          in: "formData"
+          type: "integer"
+          description: "Quantity of the book"
+          required: false
+        - name: "image_url"
+          in: "formData"
+          description: "Image url for the book"
+          required: false
+          type: "string"
+        - name: "description"
+          description: "Description of the book"
+          in: formData
+          required: false
+          type: string
+        - name: "price"
+          description: "Price of book as a decimal value"
+          in: formData
+          required: false
+          type: number
+      responses:
+        200:
+          description: "Book response"
+          schema:
+            $ref: "#/definitions/Book"
+  "/authors/{authorName}/books":
+    get:
+      tags:
+        - "Author"
+      description: "Retrieve all books by a specific author"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "authorName"
+          in: "path"
+          description: "Name of existing author"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Book response"
+          schema:
+            $ref: "#/definitions/Author"
+        400:
+          description: "Author doesnt exist"
+  /swagger:
+    x-swagger-pipe: swagger_raw
+# complex objects have schema definitions
+definitions:
+  Book:
+    type: "object"
+    properties:
+      data:
+        type: "object"
+        properties:
+          id:
+            type: "integer"
+            description: "ID for the book"
+          title:
+            type: "string"
+            description: "Title of the book"
+          description:
+            type: "string"
+            description: "Description of the book"
+          price:
+            type: "integer"
+            description: "Price of the book"
+          currency:
+            type: "string"
+            description: "Currency of the book i.e. GBP"
+          image_url:
+            type: "string"
+            description: "Url for book image"
+          tags:
+            type: "object"
+            properties:
+              id:
+                type: "integer"
+                description: "ID for the Tag"
+              local_name:
+                type: "string"
+                description: "Local name for the book"
+              local_display_name:
+                type: "string"
+                description: "Local display name for the book"
+              ebay_name:
+                type: "string"
+                description: "Ebay name for the tag"
+              ebay_display_name:
+                type: "string"
+                description: "Ebay display name of the tag"
+              amazon_name:
+                type: "string"
+                description: "Amazon name for the tag"
+              amazon_display_name:
+                type: "string"
+                description: "Amazon display name of the tag"
+          author:
+            type: "object"
+            properties:
+              id:
+                type: "integer"
+                description: "Id of the author"
+              name:
+                type: "string"
+                description: "Name of the author"
+              bio:
+                type: "string"
+                description: "Bio of the author"
+          book_type:
+            type: "object"
+            properties:
+              id:
+                type: "integer"
+                description: "ID of the book type"
+              type:
+                type: "string"
+                description: "Type of the book"
+              name:
+                type: "string"
+                description: "Name of the book"
+  Author:
+    type: "object"
+    properties:
+      data:
+        type: "object"
+        properties:
+          id:
+            type: "integer"
+            description: "ID for the author"
+          name:
+            type: "string"
+            description: "Name of the author"
+          bio:
+            type: "string"
+            description: "Author's Bio"
+          books:
+            type: "array"
+            items:
+              properties:
+                id:
+                  type: "integer"
+                  description: "ID for the book"
+                title:
+                  type: "string"
+                  description: "Title of the book"
+                description:
+                  type: "string"
+                  description: "Description of the book"
+                price:
+                  type: "integer"
+                  description: "Price of the book"
+                currency:
+                  type: "string"
+                  description: "Currency of the book i.e. GBP"
+                image_url:
+                  type: "string"
+                  description: "Url for book image"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
